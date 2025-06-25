@@ -1,16 +1,28 @@
 let timer: number | null = null;
 let enabled = true;
 
+let notificationMinute = 23;
+
+export function setNotificationMinute(minute: number) {
+  if (minute < 0) minute = 0;
+  if (minute > 59) minute = 59;
+  notificationMinute = minute;
+}
+
 export function getNextNotificationTime(): Date {
   const now = new Date();
   const next = new Date(now);
   const min = now.getMinutes();
-  if (min < 23) {
-    next.setMinutes(23, 0, 0);
-  } else if (min < 53) {
-    next.setMinutes(53, 0, 0);
+  if (min < notificationMinute) {
+    next.setMinutes(notificationMinute, 0, 0);
+  } else if (min < (notificationMinute + 30) % 60) {
+    next.setMinutes((notificationMinute + 30) % 60, 0, 0);
+    if (notificationMinute + 30 >= 60) {
+      next.setHours(now.getHours() + 1);
+    }
   } else {
-    next.setHours(now.getHours() + 1, 23, 0, 0);
+    next.setHours(now.getHours() + 1);
+    next.setMinutes(notificationMinute, 0, 0);
   }
   return next;
 }
@@ -19,7 +31,8 @@ export function getMsUntilNextNotification(): number {
   return getNextNotificationTime().getTime() - Date.now();
 }
 
-export const startNotificationTimer = (): void => {
+export const startNotificationTimer = (minute?: number): void => {
+  if (typeof minute === 'number') setNotificationMinute(minute);
   if (timer !== null) {
     console.log('Notification timer already started.');
     return;
