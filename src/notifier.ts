@@ -25,36 +25,48 @@ export const startNotificationTimer = (): void => {
     return;
   }
 
-  const getMsUntilNextSlot = () => {
+  const scheduleBothNotifications = () => {
+    if (!enabled) {
+      console.log('Notifications disabled, not scheduling.');
+      return;
+    }
     const now = new Date();
-    const next = new Date(now);
-    // Get current minutes
-    const min = now.getMinutes();
-    if (min < 23) {
-      next.setMinutes(23, 0, 0);
-    } else if (min < 53) {
-      next.setMinutes(53, 0, 0);
+    const nextSlot = getNextNotificationTime();
+    const msUntilSlot = nextSlot.getTime() - now.getTime();
+    const msUntilPre = msUntilSlot - 60000; // 1 minute before
+
+    // Schedule pre-notification
+    if (msUntilPre > 0) {
+      timer = window.setTimeout(() => {
+        if (enabled && Notification.permission === 'granted') {
+          new Notification("1 minute until optimal water harvest time!");
+          console.log('Pre-notification sent.');
+        }
+        // Schedule main notification at slot
+        const msFromNow = nextSlot.getTime() - Date.now();
+        timer = window.setTimeout(() => {
+          if (enabled && Notification.permission === 'granted') {
+            new Notification("It's optimal water harvest time!");
+            console.log('Notification sent.');
+          }
+          // Schedule next cycle
+          scheduleBothNotifications();
+        }, msFromNow > 0 ? msFromNow : 0);
+      }, msUntilPre);
     } else {
-      // Next slot is at :23 of the next hour
-      next.setHours(now.getHours() + 1, 23, 0, 0);
+      // If less than 1 minute to slot, skip pre, schedule main notification
+      timer = window.setTimeout(() => {
+        if (enabled && Notification.permission === 'granted') {
+          new Notification("It's optimal water harvest time!");
+          console.log('Notification sent.');
+        }
+        // Schedule next cycle
+        scheduleBothNotifications();
+      }, msUntilSlot > 0 ? msUntilSlot : 0);
     }
-    return next.getTime() - now.getTime();
   };
 
-  const scheduleNotification = () => {
-    if (enabled && Notification.permission === 'granted') {
-      new Notification("It's optimal water harvest time!");
-      console.log('Notification sent.');
-    } else {
-      console.log('Notification disabled or permission not granted.');
-    }
-    timer = window.setTimeout(scheduleNotification, 30 * 60 * 1000); // Always 30 min to next slot
-  };
-
-  // Schedule first notification at the next slot (:23 or :53)
-  const msUntilNext = getMsUntilNextSlot();
-  console.log(`First notification in ${msUntilNext / 1000} seconds.`);
-  timer = window.setTimeout(scheduleNotification, msUntilNext);
+  scheduleBothNotifications();
 };
 
 export const stopNotificationTimer = (): void => {

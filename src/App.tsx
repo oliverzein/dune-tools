@@ -36,12 +36,8 @@ function App() {
   };
 
   return (
-    <div style={{ maxWidth: 480, margin: '0 auto', padding: '2rem', textAlign: 'center' }}>
-      <h1>Water Harvest Notifier</h1>
-      <p style={{ fontSize: '1.1em', marginBottom: '2em' }}>
-        This app will display a native notification every 30 minutes.<br />
-        Use the button below to enable or disable notifications.
-      </p>
+    <div style={{ maxWidth: 480, margin: '0 auto', textAlign: 'center' }}>
+      <h2>Water Harvest Notifier</h2>
       <button
         style={{
           padding: '1em 2em',
@@ -62,7 +58,7 @@ function App() {
       <button
         style={{
           padding: '0.7em 1.5em',
-          fontSize: '1em',
+          fontSize: '10px',
           borderRadius: 8,
           background: '#2196f3',
           color: '#fff',
@@ -92,7 +88,7 @@ function App() {
         Notifications are <b>{notificationsEnabled ? 'ENABLED' : 'DISABLED'}</b>.
       </div>
       {notificationsEnabled && (
-        <div style={{ marginTop: '0.7em', fontSize: '1em', color: '#333' }}>
+        <div style={{ marginTop: '0.7em', fontSize: '1em', color: '#fff' }}>
           <div>
             Next notification at: <b>{nextTime ? nextTime.toLocaleTimeString() : '...'}</b>
           </div>

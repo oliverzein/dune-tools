@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+Widget/Plasma/org.kde.plasma.digitalclock/
+Widget/Plasma/org.kde.plasma.timer/
+Widget/Plasma/oztest/

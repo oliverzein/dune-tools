@@ -1,0 +1,25 @@
+{
+  "KPackageStructure": "Plasma/Applet",
+  "KPlugin": {
+    "Id": "waterharvest",
+    "Authors": [
+      {
+        "Name": "oliverzein",
+        "Email": "oliverzein@gmail.com"
+      }
+    ],
+    "Name": "Water Harvest Notifier",
+    "Description": "Shows next optimal water harvest time",
+    "Icon": "clock",
+    "ServiceTypes": ["Plasma/Applet"],
+    "PluginType": "Plasma/Applet",
+    "FormFactors": ["desktop", "panel"],
+    "MimeTypes": [],
+    "Version": "1.0",
+    "Website": "",
+    "Category": "Utilities",
+    "License": "GPL",
+    "EnabledByDefault": true
+  },
+  "X-Plasma-API-Minimum-Version": "6.0"
+}
