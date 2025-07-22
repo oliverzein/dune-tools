@@ -8,7 +8,17 @@ import org.kde.notification 1.0
 PlasmoidItem {
     id: root
     
-    Layout.preferredWidth: Kirigami.Units.gridUnit * 4
+    MouseArea {
+        anchors.fill: parent
+        onClicked: {
+            console.log("[Plasmoid] Widget clicked at " + new Date().toLocaleString());
+            plasmoid.configuration.timerEnabled = !plasmoid.configuration.timerEnabled;
+        }
+        // Let normal mouse events through for other UI
+        propagateComposedEvents: true
+    }
+
+    Layout.preferredWidth: plasmoid.configuration.timerEnabled ? Kirigami.Units.gridUnit * 4 : Kirigami.Units.gridUnit * 2
 
     property int secondsLeft: 0
     property list<int> refMinutes: []
@@ -62,10 +72,12 @@ PlasmoidItem {
                 next.setHours(now.getHours() + 1, root.refMinutes[0], 0, 0);
             }
             root.secondsLeft = Math.floor((next - now) / 1000);
-                        
-            if (root.secondsLeft == 2 * 60) {
-                notification.text = "Optimal harvest time in 2 minutes!";
-                notification.sendEvent("notification");
+
+            if (plasmoid.configuration.enableNotifications) {
+                if (root.secondsLeft == plasmoid.configuration.notificationTime * 60) {
+                    notification.text = "Optimal harvest time in " + plasmoid.configuration.notificationTime + " minutes!";
+                    notification.sendEvent("notification");
+                }
             }
         }
 
@@ -77,9 +89,17 @@ PlasmoidItem {
         anchors.right: parent.right
         id: textLabel
         text: Math.floor(root.secondsLeft/60) + ":" + (root.secondsLeft%60).toString().padStart(2, '0')
-        //text: root.secondsLeft.toString()
         font.pixelSize: 12
         horizontalAlignment: Text.AlignHCenter
+        visible: plasmoid.configuration.timerEnabled
+    }
+
+    // Show icon when timer is disabled
+    Image {
+        anchors.fill: parent
+        source: "../images/desert_color.png"
+        visible: !plasmoid.configuration.timerEnabled
+        fillMode: Image.PreserveAspectFit
     }
 
     PlasmaComponents.ProgressBar {
@@ -88,5 +108,7 @@ PlasmoidItem {
         anchors.right: parent.right
         value: root.secondsLeft
         to: 30 * 60 // 30 minutes in seconds
+        visible: plasmoid.configuration.timerEnabled
     }
+
 }

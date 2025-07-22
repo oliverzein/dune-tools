@@ -125,6 +125,9 @@ function ProgressBar({ msLeft, notifMinute }: { msLeft: number, notifMinute: num
   const totalMs = 30 * 60 * 1000;
   let percent = Math.max(0, Math.min(1, msLeft / totalMs));
   const timeLabel = formatMs(msLeft);
+  const nextTime = new Date();
+  nextTime.setMinutes(nextTime.getMinutes() + Math.ceil(msLeft / 60000));
+  nextTime.setSeconds(0, 0);
   return (
     <div style={{
       margin: '0.5em 0',
@@ -154,15 +157,21 @@ function ProgressBar({ msLeft, notifMinute }: { msLeft: number, notifMinute: num
         top: 0,
         zIndex: 1,
       }} />
-      <span style={{
-        position: 'relative',
-        zIndex: 2,
-        width: '100%',
-        textAlign: 'center',
-        userSelect: 'none',
-        pointerEvents: 'none',
-        mixBlendMode: percent > 0.5 ? 'normal' : 'difference',
-      }}>{timeLabel}</span>
+      <span 
+        title={`Next notification at ${nextTime.getHours().toString().padStart(2, '0')}:${nextTime.getMinutes().toString().padStart(2, '0')} (${notifMinute} and ${(notifMinute + 30) % 60} minutes past each hour)`}
+        style={{
+          position: 'relative',
+          zIndex: 2,
+          width: '100%',
+          textAlign: 'center',
+          userSelect: 'none',
+          pointerEvents: 'auto',
+          cursor: 'help',
+          mixBlendMode: percent > 0.5 ? 'normal' : 'difference',
+        }}
+      >
+        {timeLabel}
+      </span>
     </div>
   );
 }

@@ -10,7 +10,7 @@ import org.kde.plasma.configuration 2.0
 
 ConfigModel {
     ConfigCategory {
-         name: "Reference Time"
+         name: "Settings"
          icon: "chronometer"
          source: "configReference.qml"
     }

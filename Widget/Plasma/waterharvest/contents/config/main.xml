@@ -6,8 +6,17 @@
   <kcfgfile name=""/>
 
   <group name="General">
+    <entry name="timerEnabled" type="Bool">
+      <default>true</default>
+    </entry>
     <entry name="refTime" type="String">
       <default>14:53</default>
+    </entry>
+    <entry name="enableNotifications" type="Bool">
+      <default>true</default>
+    </entry>
+    <entry name="notificationTime" type="Int">
+      <default>20</default>
     </entry>
   </group>
 </kcfg>

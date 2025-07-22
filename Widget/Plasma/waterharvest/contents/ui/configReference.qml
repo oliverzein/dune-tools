@@ -13,6 +13,8 @@ import org.kde.kcmutils as KCM
 
 KCM.SimpleKCM {
     property alias cfg_refTime: refTime.text
+    property alias cfg_enableNotifications: enableNotifications.checked
+    property alias cfg_notificationTime: notificationTime.value
 
     Kirigami.FormLayout {
         RowLayout {
@@ -23,6 +25,27 @@ KCM.SimpleKCM {
             QQC2.TextField {
                 id: refTime
                 Layout.fillWidth: true
+            }
+        }        
+        RowLayout {
+            Layout.fillWidth: true
+
+            Kirigami.FormData.label: "Enable Notifications"
+
+            QQC2.CheckBox {
+                id: enableNotifications
+                Layout.fillWidth: true
+            }
+        }
+        RowLayout {
+            Layout.fillWidth: true
+
+            Kirigami.FormData.label: "Notification Time"
+
+            QQC2.SpinBox {
+                id: notificationTime
+                Layout.fillWidth: true
+                enabled: enableNotifications.checked
             }
         }
     }
